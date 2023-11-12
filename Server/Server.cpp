@@ -156,6 +156,7 @@ void Server::analyseCommand(UserForm& form) {
 void Server::resetUserForm(UserForm& form) {
 	form.first.clear();
 	form.second = NULL;
+	errno = 0;
 }
 
 void Server::acceptHexChatCommand(UserForm& form) {
@@ -203,7 +204,7 @@ void Server::executeCommand(UserForm& form) {
 	std::string	command;
 	ContMessage	message;
 
-	if (errno) goto ERROR;
+	if (errno && form.second) goto ERROR;
 	if (!form.second || form.first.empty()) return; //has not contain user or message(could be edited recived message)
 	command = form.first[0];
 	form.first.erase(form.first.begin());
@@ -229,6 +230,7 @@ void Server::executeCommand(UserForm& form) {
 	ERROR:
 	if (errno == ERRNO_ERR_NOTREGISTERED) message.push_back(ERR_NOTREGISTERED(Utils::getSorurce(form.second)));
 	else if (errno == ERRNO_ERR_UNKNOWNCOMMAND) message.push_back(ERR_UNKNOWNCOMMAND(Utils::getSorurce(form.second)));
+
 	form.second->sendMessageToUser(form.second, message);
 }
 //Command Methods End
