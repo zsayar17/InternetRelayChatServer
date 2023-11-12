@@ -22,7 +22,6 @@ Server& Server::operator=(const Server& other) {
 
 Server::~Server() {
 	destroyServer();
-	std::cout << "dest\n";
 }
 //Chaplin's Form end
 
@@ -123,6 +122,14 @@ void Server::recieveMessage(UserForm& form) {
 		dissconnectUser(user_id);
 		return ; //client killed communicataion with signal
 	}
+
+	if (!Utils::checkComplatedMassage(message)) {
+		users[user_id]->writeMessageToBuffer(message);
+		return;
+	}
+	message = users[user_id]->readMessageBuffer() + message;
+	users[user_id]->cleanMessageBuffer();
+
 	form.first.push_back(message);
 	form.second = reinterpret_cast<IUser*>(users[user_id]);
 }
@@ -133,18 +140,18 @@ void Server::analyseCommand(UserForm& form) {
 	errno = 0;
 	if (!form.second || !form.first.size()) return;
 
+
 	Utils::reshapeMessage(form.first[0]);
 	if (!form.first[0].size()) goto FAILED; //after reduce '\n' and '\r' empty command
 
 	message = Utils::split(form.first[0], ' ');
 	if (!message.size()) goto FAILED; //no any command
 
-
 	Utils::reshapeCommand(message[0]);
 	if (!message[0].size()) goto FAILED; //after reduce '/' empty command
 
 	form.first.insert(form.first.begin(), message[0]);
-	acceptHexChatCommand(form);
+	if (acceptHexChatCommand(form)) return;
 	return ;
 
 	FAILED:
@@ -159,25 +166,25 @@ void Server::resetUserForm(UserForm& form) {
 	errno = 0;
 }
 
-void Server::acceptHexChatCommand(UserForm& form) {
+bool Server::acceptHexChatCommand(UserForm& form) {
 	ContMessage message;
 
 	if (form.first[0] == "WHO") {
 		resetUserForm(form);
-		return ;
+		return (true);
 	}
-	else if (!(form.first[1].find('\n') != form.first[1].npos)) return;
-
+	else if (!(form.first[1].find('\n') != form.first[1].npos)) return (false);
 
 	message = Utils::split(form.first[1], '\n');
 	for (size_t i = 0; i < message.size(); i++) {
-		if (message[i].find("CAP") != std::string::npos) continue;
+		if (message[i].find("CAP") == 0) continue;
 		form.first.clear();
 		form.first.push_back(message[i]);
 		analyseCommand(form);
 		executeCommand(form);
 	}
 	resetUserForm(form);
+	return (true);
 }
 //Communication Methods Begin
 

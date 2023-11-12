@@ -64,6 +64,12 @@ void Utils::setSignal(int new_signal) {
 	u_signal = new_signal;
 }
 
+bool Utils::checkComplatedMassage(std::string& message) {
+	if (message.size() && *(message.end() - 1) == '\n') return (true);
+	if (message.size() && *(message.end() - 1) == '\r') return (true);
+	return (false);
+}
+
 const char* InvalidArgumentException::what() const throw() {
 	return ("Invalid Argument!");
 }
@@ -71,4 +77,3 @@ const char* InvalidArgumentException::what() const throw() {
 const char* BadPortException::what() const throw() {
 	return ("Bad Port Argument!");
 }
-

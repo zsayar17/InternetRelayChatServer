@@ -18,6 +18,7 @@ class Utils
 		static void fixChannelNameFormat(std::string& str);
 		static std::string getSorurce(IUser *user);
 		static short convertToShort(std::string str);
+		static bool checkComplatedMassage(std::string& message);
 };
 
 class BadPortException : public std::exception {

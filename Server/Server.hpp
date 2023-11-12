@@ -54,7 +54,7 @@ class Server : public IServer
 		//Private Communication Methods
 		void recieveMessage(UserForm& form);
 		void resetUserForm(UserForm& form);
-		void acceptHexChatCommand(UserForm& form);
+		bool acceptHexChatCommand(UserForm& form);
 
 		//Commands Methods
 		void analyseCommand(UserForm& form);

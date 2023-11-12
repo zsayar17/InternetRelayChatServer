@@ -30,12 +30,27 @@ void User::bindSocket(Socket* sock) {
 	this->sock = sock;
 	user_info.user_id = sock->getFd();
 }
+//Socket End
 
+
+
+//Message Features Begin
 std::string User::reciveMessage() {
 	return (sock->reciveMessage());
 }
-//Socket End
 
+void User::writeMessageToBuffer(std::string message) {
+	user_info.message_buffer += message;
+}
+
+std::string User::readMessageBuffer() {
+	return (user_info.message_buffer);
+}
+
+void User::cleanMessageBuffer() {
+	user_info.message_buffer.clear();
+}
+//Message Features Begin
 
 
 //Login Authentication Begin

@@ -6,6 +6,7 @@
 //https://hea-www.harvard.edu/~fine/Tech/addrinuse.html
 //ps -ef
 //top -Hp <pid num>
+//find . -name "*.cpp" -o -name "*.hpp" | xargs cat | wc -l
 
 void sig_handler(int signo) {
 	if (signo == SIGINT) Utils::setSignal(signo);

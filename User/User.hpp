@@ -85,7 +85,12 @@ class User : public IUser
 
 		//Socket
 		void bindSocket(Socket* sock);
+
+		//Message Features
 		std::string reciveMessage();
+		void writeMessageToBuffer(std::string message);
+		std::string readMessageBuffer();
+		void cleanMessageBuffer();
 
 		//Login Authentication
 		void setActive();

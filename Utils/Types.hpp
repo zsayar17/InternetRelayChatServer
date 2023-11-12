@@ -72,6 +72,7 @@ typedef struct
 	std::string hostname;
 	int		user_id;
 	bool	is_active;
+	std::string message_buffer;
 } user_t;
 
 //Mode Attributes
